@@ -1,42 +1,57 @@
 #pragma once
 
+#include <memory>
 #include <utility>
 
-#include "absl/container/flat_hash_set.h"
-#include "absl/functional/any_invocable.h"
+#include "absl/hash/hash.h"
+#include "absl/strings/str_format.h"
 
 namespace micrograd {
 
+class ValueImpl;
+
+/**
+ * The underlying engine for creating mathmatical expressions that can back
+ * propigate.
+ */
 class Value {
  public:
   explicit Value(float data);
 
-  Value operator+(Value* other);
-  Value operator*(Value* other);
+  Value Add(const Value& other);
+  Value Add(float other) { return Add(Value(other)); }
 
-  void backward();
+  Value Multiply(const Value& other);
+  Value Multiply(float other) { return Multiply(Value(other)); }
+
+  float value() const;
+  float gradient() const;
+
+  /**
+   * Populate the gradient for this node and all it's children.
+   */
+  void Backward();
 
   template <typename H>
   friend H AbslHashValue(H h, const Value& v) {
-    return H::combine(std::move(h), v.value_, v.grad_, v.backward_,
-                      v.children_);
+    HashValue(absl::HashState::Create(&h), *v.impl_.get());
+    return std::move(h);
   }
 
   template <typename Sink>
   friend void AbslStringify(Sink& sink, const Value& p) {
-    absl::Format(&sink, "Value(value=%f, grad=%f, children=%v)", p.value_,
-                 p.grad_, p.children_);
+    absl::Format(&sink, "%s", DebugString(*p.impl_.get()));
   }
 
-  const absl::flat_hash_set<Value*>& children() const;
+  bool operator==(const Value&) const = default;
 
  private:
-  Value(float data, absl::flat_hash_set<Value*> children);
+  explicit Value(std::shared_ptr<ValueImpl> impl);
 
-  float value_;
-  float grad_ = 0;
-  absl::flat_hash_set<Value*> children_;
-  absl::AnyInvocable<void()> backward_ = [] {};
+  static void HashValue(absl::HashState state, const ValueImpl&);
+  static std::string DebugString(const ValueImpl&);
+
+  std::shared_ptr<ValueImpl> impl_;
 };
 
 }  // namespace micrograd

@@ -9,11 +9,12 @@ cc_library(
 )
 
 cc_test(
-        name = "micrograd_test",
-        srcs = ["micrograd_test.cc"],
-        deps = [
-                ":micrograd",
-                "@googletest//:gtest",
-                "@googletest//:gtest_main",
-        ],
+    name = "micrograd_test",
+    srcs = ["micrograd_test.cc"],
+    deps = [
+        ":micrograd",
+        "@googletest//:gtest",
+        "@googletest//:gtest_main",
+        "@pytorch//:libtorch",
+    ],
 )

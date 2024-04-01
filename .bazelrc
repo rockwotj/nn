@@ -1,1 +1,4 @@
-build --features=layering_check
+build --action_env=CC=clang-17
+build --action_env=CXX=clang++-17
+build --cxxopt='-D_GLIBCXX_USE_CXX11_ABI=1'
+build --cxxopt='-std=c++23'

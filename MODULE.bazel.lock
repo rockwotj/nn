@@ -1,6 +1,6 @@
 {
   "lockFileVersion": 6,
-  "moduleFileHash": "765690ae44001d5ccf71e2a12353a18ede211a179bd22bbb08558f52078dc56a",
+  "moduleFileHash": "0a25a5373cf673837b933c90965174fab5609ca9ee4e884088c9932ade42bcd3",
   "flags": {
     "cmdRegistries": [
       "https://bcr.bazel.build/"
@@ -22,9 +22,7 @@
       "key": "<root>",
       "repoName": "com_github_rockwotj_nn",
       "executionPlatformsToRegister": [],
-      "toolchainsToRegister": [
-        "@llvm_toolchain//:all"
-      ],
+      "toolchainsToRegister": [],
       "extensionUsages": [
         {
           "extensionBzlFile": "//:MODULE.bazel",
@@ -35,36 +33,27 @@
             "line": 0,
             "column": 0
           },
-          "imports": {},
-          "devImports": [],
-          "tags": [],
-          "hasDevUseExtension": false,
-          "hasNonDevUseExtension": false
-        },
-        {
-          "extensionBzlFile": "@toolchains_llvm//toolchain/extensions:llvm.bzl",
-          "extensionName": "llvm",
-          "usingModule": "<root>",
-          "location": {
-            "file": "@@//:MODULE.bazel",
-            "line": 19,
-            "column": 21
-          },
           "imports": {
-            "llvm_toolchain": "llvm_toolchain"
+            "pytorch": "pytorch"
           },
           "devImports": [],
           "tags": [
             {
-              "tagName": "toolchain",
+              "tagName": "@bazel_tools//tools/build_defs/repo:http.bzl%http_archive",
               "attributeValues": {
-                "llvm_version": "17.0.6"
+                "strip_prefix": "libtorch",
+                "urls": [
+                  "https://download.pytorch.org/libtorch/cu121/libtorch-cxx11-abi-shared-with-deps-2.2.2%2Bcu121.zip"
+                ],
+                "sha256": "8e1c41735651aabf9a85ced6788633175a4fa4c3d419066a06a927f026dfb118",
+                "build_file": "@//thirdparty:libtorch.BUILD",
+                "name": "pytorch"
               },
               "devDependency": false,
               "location": {
                 "file": "@@//:MODULE.bazel",
-                "line": 20,
-                "column": 15
+                "line": 19,
+                "column": 13
               }
             }
           ],
@@ -77,7 +66,7 @@
         "googletest": "googletest@1.14.0.bcr.1",
         "abseil-cpp": "abseil-cpp@20240116.1",
         "google_benchmark": "google_benchmark@1.8.3",
-        "toolchains_llvm": "toolchains_llvm@1.0.0",
+        "bazel_skylib": "bazel_skylib@1.5.0",
         "bazel_tools": "bazel_tools@_",
         "local_config_platform": "local_config_platform@_"
       }
@@ -250,17 +239,18 @@
         }
       }
     },
-    "toolchains_llvm@1.0.0": {
-      "name": "toolchains_llvm",
-      "version": "1.0.0",
-      "key": "toolchains_llvm@1.0.0",
-      "repoName": "toolchains_llvm",
+    "bazel_skylib@1.5.0": {
+      "name": "bazel_skylib",
+      "version": "1.5.0",
+      "key": "bazel_skylib@1.5.0",
+      "repoName": "bazel_skylib",
       "executionPlatformsToRegister": [],
-      "toolchainsToRegister": [],
+      "toolchainsToRegister": [
+        "//toolchains/unittest:cmd_toolchain",
+        "//toolchains/unittest:bash_toolchain"
+      ],
       "extensionUsages": [],
       "deps": {
-        "bazel_skylib": "bazel_skylib@1.5.0",
-        "rules_cc": "rules_cc@0.0.9",
         "platforms": "platforms@0.0.8",
         "bazel_tools": "bazel_tools@_",
         "local_config_platform": "local_config_platform@_"
@@ -270,10 +260,10 @@
         "ruleClassName": "http_archive",
         "attributes": {
           "urls": [
-            "https://github.com/bazel-contrib/toolchains_llvm/releases/download/1.0.0/toolchains_llvm-1.0.0.tar.gz"
+            "https://github.com/bazelbuild/bazel-skylib/releases/download/1.5.0/bazel-skylib-1.5.0.tar.gz"
           ],
-          "integrity": "sha256-6RxDYfmQEaVIFOGvvlxDbg0ymHEUajzVjCOitK+1Bzc=",
-          "strip_prefix": "toolchains_llvm-1.0.0",
+          "integrity": "sha256-zVWgYudjuTSZIfD124w5MyiNyLpPdt2UFqrGis7jy5Q=",
+          "strip_prefix": "",
           "remote_patches": {},
           "remote_patch_strip": 0
         }
@@ -581,36 +571,6 @@
           "remote_patches": {
             "https://bcr.bazel.build/modules/re2/2023-09-01/patches/module_dot_bazel.patch": "sha256-MUQkRNgPJ0lbYqOXoBu2m2vLH7IuKEbK/VWTw7WWrnA="
           },
-          "remote_patch_strip": 0
-        }
-      }
-    },
-    "bazel_skylib@1.5.0": {
-      "name": "bazel_skylib",
-      "version": "1.5.0",
-      "key": "bazel_skylib@1.5.0",
-      "repoName": "bazel_skylib",
-      "executionPlatformsToRegister": [],
-      "toolchainsToRegister": [
-        "//toolchains/unittest:cmd_toolchain",
-        "//toolchains/unittest:bash_toolchain"
-      ],
-      "extensionUsages": [],
-      "deps": {
-        "platforms": "platforms@0.0.8",
-        "bazel_tools": "bazel_tools@_",
-        "local_config_platform": "local_config_platform@_"
-      },
-      "repoSpec": {
-        "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
-        "ruleClassName": "http_archive",
-        "attributes": {
-          "urls": [
-            "https://github.com/bazelbuild/bazel-skylib/releases/download/1.5.0/bazel-skylib-1.5.0.tar.gz"
-          ],
-          "integrity": "sha256-zVWgYudjuTSZIfD124w5MyiNyLpPdt2UFqrGis7jy5Q=",
-          "strip_prefix": "",
-          "remote_patches": {},
           "remote_patch_strip": 0
         }
       }
@@ -2455,75 +2415,6 @@
             "rules_python~",
             "bazel_tools",
             "bazel_tools"
-          ]
-        ]
-      }
-    },
-    "@@toolchains_llvm~//toolchain/extensions:llvm.bzl%llvm": {
-      "general": {
-        "bzlTransitiveDigest": "rdQ1nlqTcj0kPoX7LxaygMQPcdnBPV85jNsRMF1M/Hw=",
-        "recordedFileInputs": {},
-        "recordedDirentsInputs": {},
-        "envVariables": {},
-        "generatedRepoSpecs": {
-          "llvm_toolchain": {
-            "bzlFile": "@@toolchains_llvm~//toolchain:rules.bzl",
-            "ruleClassName": "toolchain",
-            "attributes": {
-              "absolute_paths": false,
-              "archive_flags": {},
-              "compile_flags": {},
-              "coverage_compile_flags": {},
-              "coverage_link_flags": {},
-              "cxx_builtin_include_directories": {},
-              "cxx_flags": {},
-              "cxx_standard": {},
-              "dbg_compile_flags": {},
-              "exec_arch": "",
-              "exec_os": "",
-              "link_flags": {},
-              "link_libs": {},
-              "llvm_versions": {
-                "": "17.0.6"
-              },
-              "opt_compile_flags": {},
-              "opt_link_flags": {},
-              "stdlib": {},
-              "target_settings": {},
-              "unfiltered_compile_flags": {},
-              "toolchain_roots": {},
-              "sysroot": {}
-            }
-          },
-          "llvm_toolchain_llvm": {
-            "bzlFile": "@@toolchains_llvm~//toolchain:rules.bzl",
-            "ruleClassName": "llvm",
-            "attributes": {
-              "alternative_llvm_sources": [],
-              "auth_patterns": {},
-              "distribution": "auto",
-              "exec_arch": "",
-              "exec_os": "",
-              "llvm_mirror": "",
-              "llvm_version": "17.0.6",
-              "llvm_versions": {},
-              "netrc": "",
-              "sha256": {},
-              "strip_prefix": {},
-              "urls": {}
-            }
-          }
-        },
-        "recordedRepoMappingEntries": [
-          [
-            "toolchains_llvm~",
-            "bazel_tools",
-            "bazel_tools"
-          ],
-          [
-            "toolchains_llvm~",
-            "toolchains_llvm",
-            "toolchains_llvm~"
           ]
         ]
       }
