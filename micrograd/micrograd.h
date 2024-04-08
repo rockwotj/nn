@@ -18,11 +18,19 @@ class Value {
  public:
   explicit Value(float data);
 
-  Value Add(const Value& other);
-  Value Add(float other) { return Add(Value(other)); }
+  Value Add(const Value& other) const;
+  Value Add(float other) const { return Add(Value(other)); }
+  Value Subtract(const Value& other) const;
+  Value Subtract(float other) const { return Subtract(Value(other)); }
 
-  Value Multiply(const Value& other);
-  Value Multiply(float other) { return Multiply(Value(other)); }
+  Value Multiply(const Value& other) const;
+  Value Multiply(float other) const { return Multiply(Value(other)); }
+  Value Divide(const Value& other) const;
+  Value Divide(float other) const { return Divide(Value(other)); }
+
+  Value Pow(float other) const;
+  Value Negate() const;
+  Value Relu() const;
 
   float value() const;
   float gradient() const;

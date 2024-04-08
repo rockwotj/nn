@@ -11,6 +11,8 @@ enum class Op : char {
   kNone = ' ',
   kAdd = '+',
   kMultiply = '*',
+  kPow = '^',
+  kReLU = '?',
 };
 }
 
@@ -40,6 +42,24 @@ class ValueImpl : public std::enable_shared_from_this<ValueImpl> {
     out->backward_ = [this, other = other.get(), out = out.get()] {
       this->grad_ += other->value_ * out->grad_;
       other->grad_ += this->value_ * out->grad_;
+    };
+    return out;
+  }
+
+  std::shared_ptr<ValueImpl> Pow(float other) {
+    auto out = std::make_shared<ValueImpl>(
+        std::pow(value_, other), ChildrenSet({shared_from_this()}), Op::kPow);
+    out->backward_ = [this, other, out = out.get()] {
+      this->grad_ += (other * std::pow(value_, other - 1)) * out->grad_;
+    };
+    return out;
+  }
+
+  std::shared_ptr<ValueImpl> Relu() {
+    auto out = std::make_shared<ValueImpl>(
+        value_ < 0 ? 0 : value_, ChildrenSet({shared_from_this()}), Op::kReLU);
+    out->backward_ = [this, out = out.get()] {
+      this->grad_ += out->value_ > 0 ? out->grad_ : 0;
     };
     return out;
   }
@@ -90,10 +110,21 @@ class ValueImpl : public std::enable_shared_from_this<ValueImpl> {
 
 Value::Value(float data) : impl_(std::make_shared<ValueImpl>(data)) {}
 
-Value Value::Add(const Value& other) { return Value(impl_->Add(other.impl_)); }
-Value Value::Multiply(const Value& other) {
+Value Value::Add(const Value& other) const {
+  return Value(impl_->Add(other.impl_));
+}
+Value Value::Subtract(const Value& other) const {
+  return Value(impl_->Add(other.Negate().impl_));
+}
+Value Value::Multiply(const Value& other) const {
   return Value(impl_->Multiply(other.impl_));
 }
+Value Value::Divide(const Value& other) const {
+  return Value(impl_->Multiply(other.Pow(-1).impl_));
+}
+Value Value::Pow(float other) const { return Value(impl_->Pow(other)); }
+Value Value::Negate() const { return this->Multiply(-1); }
+Value Value::Relu() const { return Value(impl_->Relu()); }
 void Value::Backward() { impl_->Backward(); }
 float Value::value() const { return impl_->value(); }
 float Value::gradient() const { return impl_->grad(); }

@@ -1,6 +1,6 @@
 {
   "lockFileVersion": 6,
-  "moduleFileHash": "0a25a5373cf673837b933c90965174fab5609ca9ee4e884088c9932ade42bcd3",
+  "moduleFileHash": "5755b236745010a176f79758f147466b59a17658eb8fc3a7b03fd8b8082777d6",
   "flags": {
     "cmdRegistries": [
       "https://bcr.bazel.build/"
@@ -41,18 +41,18 @@
             {
               "tagName": "@bazel_tools//tools/build_defs/repo:http.bzl%http_archive",
               "attributeValues": {
+                "build_file": "@//thirdparty:libtorch.BUILD",
+                "sha256": "8e1c41735651aabf9a85ced6788633175a4fa4c3d419066a06a927f026dfb118",
                 "strip_prefix": "libtorch",
                 "urls": [
                   "https://download.pytorch.org/libtorch/cu121/libtorch-cxx11-abi-shared-with-deps-2.2.2%2Bcu121.zip"
                 ],
-                "sha256": "8e1c41735651aabf9a85ced6788633175a4fa4c3d419066a06a927f026dfb118",
-                "build_file": "@//thirdparty:libtorch.BUILD",
                 "name": "pytorch"
               },
               "devDependency": false,
               "location": {
                 "file": "@@//:MODULE.bazel",
-                "line": 19,
+                "line": 22,
                 "column": 13
               }
             }
