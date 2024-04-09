@@ -33,7 +33,9 @@ class Value {
   Value Relu() const;
 
   float value() const;
+  void value(float);
   float gradient() const;
+  void gradient(float);
 
   /**
    * Populate the gradient for this node and all it's children.

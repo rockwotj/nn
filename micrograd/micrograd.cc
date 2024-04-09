@@ -76,7 +76,9 @@ class ValueImpl : public std::enable_shared_from_this<ValueImpl> {
   }
 
   float value() const { return value_; }
+  void value(float v) { value_ = v; }
   float grad() const { return grad_; }
+  void grad(float v) { grad_ = v; }
 
   std::string DebugString() const {
     std::string children_debug_string = "{";
@@ -127,7 +129,9 @@ Value Value::Negate() const { return this->Multiply(-1); }
 Value Value::Relu() const { return Value(impl_->Relu()); }
 void Value::Backward() { impl_->Backward(); }
 float Value::value() const { return impl_->value(); }
+void Value::value(float v) { impl_->value(v); }
 float Value::gradient() const { return impl_->grad(); }
+void Value::gradient(float v) { impl_->grad(v); }
 
 Value::Value(std::shared_ptr<ValueImpl> impl) : impl_(std::move(impl)) {}
 

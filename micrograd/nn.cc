@@ -86,6 +86,7 @@ std::vector<Value> MLP::operator()(std::span<const Value> x) const {
   }
   return current;
 }
+
 std::vector<Value> MLP::Parameters() const {
   std::vector<Value> outputs;
   for (const auto& layer : layers_) {
