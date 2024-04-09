@@ -1,6 +1,6 @@
 {
   "lockFileVersion": 6,
-  "moduleFileHash": "5755b236745010a176f79758f147466b59a17658eb8fc3a7b03fd8b8082777d6",
+  "moduleFileHash": "bec7c5690e7669a153de02e7596d895c7ec8b4104a234ac9be95299dec39cd90",
   "flags": {
     "cmdRegistries": [
       "https://bcr.bazel.build/"
@@ -34,7 +34,8 @@
             "column": 0
           },
           "imports": {
-            "pytorch": "pytorch"
+            "pytorch": "pytorch",
+            "plot": "plot"
           },
           "devImports": [],
           "tags": [
@@ -52,7 +53,25 @@
               "devDependency": false,
               "location": {
                 "file": "@@//:MODULE.bazel",
-                "line": 22,
+                "line": 23,
+                "column": 13
+              }
+            },
+            {
+              "tagName": "@bazel_tools//tools/build_defs/repo:http.bzl%http_archive",
+              "attributeValues": {
+                "build_file": "@//thirdparty:plot.BUILD",
+                "integrity": "sha256-bxoPryr8nNKUFtNe1boTnF/CDNYYgEpkkUK8CezJxrQ=",
+                "strip_prefix": "plot-02da3742a5eab1eab850b98dfeb6af56e44655d5",
+                "urls": [
+                  "https://github.com/fbbdev/plot/archive/02da3742a5eab1eab850b98dfeb6af56e44655d5.zip"
+                ],
+                "name": "plot"
+              },
+              "devDependency": false,
+              "location": {
+                "file": "@@//:MODULE.bazel",
+                "line": 31,
                 "column": 13
               }
             }
@@ -67,6 +86,7 @@
         "abseil-cpp": "abseil-cpp@20240116.1",
         "google_benchmark": "google_benchmark@1.8.3",
         "bazel_skylib": "bazel_skylib@1.5.0",
+        "nlohmann_json": "nlohmann_json@3.11.3",
         "bazel_tools": "bazel_tools@_",
         "local_config_platform": "local_config_platform@_"
       }
@@ -265,6 +285,34 @@
           "integrity": "sha256-zVWgYudjuTSZIfD124w5MyiNyLpPdt2UFqrGis7jy5Q=",
           "strip_prefix": "",
           "remote_patches": {},
+          "remote_patch_strip": 0
+        }
+      }
+    },
+    "nlohmann_json@3.11.3": {
+      "name": "nlohmann_json",
+      "version": "3.11.3",
+      "key": "nlohmann_json@3.11.3",
+      "repoName": "nlohmann_json",
+      "executionPlatformsToRegister": [],
+      "toolchainsToRegister": [],
+      "extensionUsages": [],
+      "deps": {
+        "bazel_tools": "bazel_tools@_",
+        "local_config_platform": "local_config_platform@_"
+      },
+      "repoSpec": {
+        "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+        "ruleClassName": "http_archive",
+        "attributes": {
+          "urls": [
+            "https://github.com/nlohmann/json/releases/download/v3.11.3/include.zip"
+          ],
+          "integrity": "sha256-oiRh0TEZrFx48gXT3x2xNAPljOG7F5TtyTE2dzE/Sp0=",
+          "strip_prefix": "",
+          "remote_patches": {
+            "https://bcr.bazel.build/modules/nlohmann_json/3.11.3/patches/module_dot_bazel.patch": "sha256-OmeSCp1IqWbHGPJs0v5taUiPLEsI9KEJPLsnPpKB/B8="
+          },
           "remote_patch_strip": 0
         }
       }

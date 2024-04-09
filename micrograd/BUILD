@@ -20,9 +20,19 @@ cc_test(
 )
 
 cc_binary(
+    name = "lecture_demo",
+    srcs = ["lecture_demo.cc"],
+    deps = [
+        ":micrograd",
+    ],
+)
+
+cc_binary(
     name = "nn_demo",
     srcs = ["nn_demo.cc"],
     deps = [
         ":micrograd",
+        "@plot//:plot",
+        "@nlohmann_json//:json",
     ],
 )

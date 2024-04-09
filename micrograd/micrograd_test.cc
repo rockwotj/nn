@@ -67,4 +67,43 @@ TEST(MicrogradValue, Neuron) {
   }
 }
 
+TEST(MicrogradValue, AllOps) {
+  {
+    auto a = Value(-4);
+    auto b = Value(2);
+    auto c = a.Add(b);
+    auto d = a.Multiply(b).Add(b.Pow(3));
+    c = c.Add(c).Add(1);
+    c = c.Add(Value(1).Add(c).Add(a.Negate()));
+    d = d.Add(d.Multiply(2).Add(b.Add(a).Relu()));
+    d = d.Add(Value(3).Multiply(d).Add(b.Subtract(a).Relu()));
+    auto e = c.Subtract(d);
+    auto f = e.Pow(2.0);
+    auto g = f.Divide(2.0);
+    g = g.Add(Value(10.0).Divide(f));
+    g.Backward();
+    EXPECT_FLOAT_EQ(g.value(), 24.704082);
+    EXPECT_FLOAT_EQ(a.gradient(), 138.83382);
+    EXPECT_FLOAT_EQ(b.gradient(), 645.5773);
+  }
+  {
+    auto a = torch::tensor({-4.0f}, torch::requires_grad());
+    auto b = torch::tensor({2.0f}, torch::requires_grad());
+    auto c = a + b;
+    auto d = a * b + b.pow(3.0f);
+    c = c + c + 1.0f;
+    c = c + 1.0f + c + (-a);
+    d = d + d * 2.0f + (b + a).relu();
+    d = d + 3.0f * d + (b - a).relu();
+    auto e = c - d;
+    auto f = e.pow(2.0f);
+    auto g = f / 2.0f;
+    g = g + 10.0 / f;
+    g.backward();
+    EXPECT_FLOAT_EQ(g.item().toFloat(), 24.704082);
+    EXPECT_FLOAT_EQ(a.grad().item().toFloat(), 138.83382);
+    EXPECT_FLOAT_EQ(b.grad().item().toFloat(), 645.57727);
+  }
+}
+
 }  // namespace micrograd

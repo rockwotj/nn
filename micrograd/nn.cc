@@ -19,7 +19,8 @@ float random_float(float start, float end) {
 
 }  // namespace
 
-Neuron::Neuron(size_t number_of_inputs) : bias_(random_float(-1, 1)) {
+Neuron::Neuron(size_t number_of_inputs, bool nonlinear)
+    : bias_(random_float(-1, 1)), nonlinear_(nonlinear) {
   weights_.reserve(number_of_inputs);
   std::generate_n(std::back_inserter(weights_), number_of_inputs,
                   [] { return Value(random_float(-1, 1)); });
@@ -29,6 +30,9 @@ Value Neuron::operator()(std::span<const Value> x) const {
   Value v = bias_;
   for (size_t i = 0; i < x.size(); ++i) {
     v = v.Add(weights_[i].Multiply(x[i]));
+  }
+  if (nonlinear_) {
+    return v.Relu();
   }
   return v;
 }
@@ -41,10 +45,11 @@ std::vector<Value> Neuron::Parameters() const {
   return p;
 }
 
-Layer::Layer(size_t number_of_inputs, size_t number_of_outputs) {
+Layer::Layer(size_t number_of_inputs, size_t number_of_outputs,
+             bool nonlinear) {
   neurons_.reserve(number_of_outputs);
   for (size_t i = 0; i < number_of_outputs; ++i) {
-    neurons_.emplace_back(number_of_inputs);
+    neurons_.emplace_back(number_of_inputs, nonlinear);
   }
 }
 
@@ -70,8 +75,9 @@ std::vector<Value> Layer::Parameters() const {
 MLP::MLP(size_t number_of_inputs, std::span<size_t> number_of_outputs) {
   layers_.reserve(number_of_outputs.size() + 1);
   size_t prev = number_of_inputs;
-  for (size_t output_size : number_of_outputs) {
-    layers_.emplace_back(prev, output_size);
+  for (size_t i = 0; size_t output_size : number_of_outputs) {
+    bool nonlinear = ++i != number_of_outputs.size();
+    layers_.emplace_back(prev, output_size, nonlinear);
     prev = output_size;
   }
 }

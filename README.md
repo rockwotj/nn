@@ -6,3 +6,4 @@ Currently I am working through: https://karpathy.ai/zero-to-hero.html
 
 Instead of Python I am working through the code in C++ because why not :smile:
 
+
