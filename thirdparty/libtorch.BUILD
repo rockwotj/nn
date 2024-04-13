@@ -9,7 +9,7 @@ copy_file(
 
 copy_file(
     name = "rename_libnvtc_builtins_so",
-    src = "lib/libnvrtc-builtins-b51b459d.so.12.1",
+    src = "lib/libnvrtc-builtins-6c5639ce.so.12.1",
     out = "lib/libnvrtc-builtins.so.12.1",
 )
 
@@ -21,7 +21,7 @@ copy_file(
 
 copy_file(
     name = "rename_libgomp_so",
-    src = "lib/libgomp-98b21ff2.so.1",
+    src = "lib/libgomp-98b21ff3.so.1",
     out = "lib/libgomp.so.1",
 )
 
@@ -43,30 +43,50 @@ copy_file(
     out = "lib/libcudart.so.12",
 )
 
+config_setting(
+    name = "is_opt",
+    values = {
+        "compilation_mode": "opt",
+    },
+)
+
 cc_library(
     name = "libtorch",
-    srcs = glob(
-        [
-            "lib/lib*.so*",
-            ":rename_libnvtc_so",
-            ":rename_libnvtc_builtins_so",
-            ":rename_libgomp_so",
-            ":rename_libnv_tools_ext_so",
-            ":rename_libcublas_so",
-            ":rename_libcublaslt_so",
-            ":rename_libcudart_so",
-        ],
-        exclude = [
-            "lib/libnvrtc-*.so.12*",
-            "lib/libgomp-*.so.1",
-            "lib/libnvToolsExt-*.so.1",
-            "lib/libcublas-*.so.12",
-            "lib/libcublasLt-*.so.12",
-            "lib/libcudart-*.so.12",
-            "lib/libtorch_python.so",
-            "lib/libnnapi_backend.so",
-        ],
-    ),
+    srcs =
+        select({
+            ":is_opt": glob(
+                ["lib/lib*.so*"],
+                exclude = [
+                    "lib/libtorch_python.so",
+                    "lib/libnnapi_backend.so",
+                    "lib/libnvrtc-*.so.12*",
+                ],
+            ) + [
+                ":rename_libnvtc_builtins_so",
+                ":rename_libnvtc_so",
+            ],
+            "//conditions:default": glob(
+                ["lib/lib*.so*"],
+                exclude = [
+                    "lib/libnvrtc-*.so.12*",
+                    "lib/libgomp-*.so.1",
+                    "lib/libnvToolsExt-*.so.1",
+                    "lib/libcublas-*.so.12",
+                    "lib/libcublasLt-*.so.12",
+                    "lib/libcudart-*.so.12",
+                    "lib/libtorch_python.so",
+                    "lib/libnnapi_backend.so",
+                ],
+            ) + [
+                ":rename_libcublas_so",
+                ":rename_libcublaslt_so",
+                ":rename_libcudart_so",
+                ":rename_libgomp_so",
+                ":rename_libnv_tools_ext_so",
+                ":rename_libnvtc_builtins_so",
+                ":rename_libnvtc_so",
+            ],
+        }),
     hdrs = glob([
         "include/ATen/**",
         "include/c10/**",
