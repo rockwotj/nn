@@ -13,6 +13,9 @@ class ValueImpl;
 /**
  * The underlying engine for creating mathmatical expressions that can back
  * propigate.
+ *
+ * This value class is a small wrapper over a shared pointer, so it is
+ * copy-able, but the underlying value is still the same.
  */
 class Value {
  public:
